@@ -84,6 +84,30 @@ function Camera() {
     recomputeEye();
   }
 
+  this.slide = function(mouseData) {
+    var x = width / 2 - mouseData.mouseMoveDiff[0];
+    var y = height / 2 - mouseData.mouseMoveDiff[1];
+    ref = this.toWorld(x, y);
+    recomputeEye();
+  }
+
+  this.toWorld = function(x, y) {
+    var sx = 2*x / width - 1;
+    var sy = 1 - 2*y / height;
+    var alpha = fov / 2;
+    var len = vec3.distance(ref, eye);
+
+    var V = vec4.clone(up);
+    var H = vec4.clone(right);
+    vec4.scale(V, V, sy*len*Math.tan(alpha));
+    vec4.scale(H, H, sx*len*width/height*Math.tan(alpha));
+
+    var p = vec4.clone(ref);
+    vec4.add(p, p, V);
+    vec4.add(p, p, H);
+    return p;
+  }
+
   rotateAbout(-Math.PI/6, [1,0,0]);
   rotateAbout(Math.PI/6, [0,1,0]);
   recomputeEye();

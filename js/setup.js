@@ -39,7 +39,11 @@ function init() {
         mouseData.mouseMoveRelDiff = [e.movementX / canvas.offsetWidth, e.movementY / canvas.offsetHeight];
         mouseData.mouseAt = [e.x, e.y];
         if (mouseData.mouseBtn == 2) {
-            gl.getCamera().rotate(mouseData);
+            if (e.shiftKey) {
+                gl.getCamera().slide(mouseData);
+            } else {
+                gl.getCamera().rotate(mouseData);
+            }
             gl.drawScene();
         }
     }
@@ -52,6 +56,9 @@ $(document).ready(function() {
             e2.preventDefault();
             if ($(e1.target).hasClass('left')) {
                 var x = $(e1.target).parent().offset().left - e2.pageX + $(e1.target).parent().width();
+                $(e1.target).parent().css('width', x);
+            } else if ($(e1.target).hasClass('right')) {
+                var x = $(e1.target).parent().offset().left - e2.pageX;
                 $(e1.target).parent().css('width', x);
             }
             window.dispatchEvent(new Event('resize'));
