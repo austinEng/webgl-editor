@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  display: table;
+  height: 100%;
+  width: 100%;
+}
+
+#canvas {
+  display: table-cell;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+}
+
+#sidebar {
+  display: table-cell;
+  width: 250px;
+  height: 100%;
+  background-color: #444;
+}
+
+.split-bar {
+  background-color: #444;
+  &.side {
+    height: 100%;
+    width: 6px;
+    cursor: col-resize;
+  }
+  &.left {
+    float: left;
+    -webkit-box-shadow: inset 3px 0px 6px 0px #555;
+  }
+}

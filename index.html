@@ -1,0 +1,64 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/main.min.css">
+<script id="shader-fs" type="x-shader/x-fragment">
+  precision highp float;
+
+  varying vec4 vColor;
+  varying vec4 vNormal;
+
+  varying vec4 lightVec;
+
+  void main(void) {
+    float diffuseTerm = dot(normalize(vNormal), normalize(lightVec));
+    if (diffuseTerm < 0.0) {
+      diffuseTerm = diffuseTerm * -0.3;
+    }
+    diffuseTerm = clamp(diffuseTerm, 0.0, 1.0);
+    float ambientTerm = 0.2;
+    float lightIntensity = diffuseTerm + ambientTerm;
+    gl_FragColor = vec4(vColor.rgb * lightIntensity, vColor.a);
+  }
+</script>
+
+<script id="shader-vs" type="x-shader/x-vertex">
+  attribute vec4 aVertexPosition;
+  attribute vec4 aVertexNormal;
+  attribute vec4 aVertexColor;
+
+  varying vec4 vColor;
+  varying vec4 vNormal;
+
+  uniform mat4 uModelMatrix;
+  uniform mat4 uViewProjMatrix;
+  uniform mat4 uInvTrMatrix;
+
+  varying vec4 lightVec;
+
+  const vec4 lightPos = vec4(2, 5, 3, 1);
+
+  void main(void) {
+    vec4 modelposition = uModelMatrix * aVertexPosition;
+
+    gl_Position = uViewProjMatrix * aVertexPosition;
+    vColor = aVertexColor;
+    vNormal = uInvTrMatrix * aVertexNormal;
+    lightVec = lightPos - modelposition;
+  }
+</script>
+</head>
+
+<body onload="init();">
+<canvas id="canvas"></canvas>
+<div id="sidebar">
+  <div class="split-bar side left"></div>
+</div>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.1.0/gl-matrix-min.js"></script>
+<script src="js/camera.js"></script>
+<script src="js/mygl.js"></script>
+<script src="js/shaderprogram.js"></script>
+<script src="js/setup.js"></script>
+</html>
